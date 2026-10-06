@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { getHealth } from "./api";
+import ConnectedInbox from "./ConnectedInbox";
 import { activity, conversations, knowledgeItems, type Conversation } from "./demo";
 import "./styles.css";
 
@@ -347,7 +348,7 @@ function App() {
 
   const renderPage = () => {
     if (page === "dashboard") return <Dashboard />;
-    if (page === "inbox") return <Inbox />;
+    if (page === "inbox") return <ConnectedInbox />;
     if (page === "knowledge") return <Knowledge />;
     if (page === "integrations") return <Integrations />;
     if (page === "metrics") return <Metrics />;
