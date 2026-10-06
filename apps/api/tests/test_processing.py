@@ -32,7 +32,9 @@ def test_dev_flow_persists_inbound_and_generated_response(client) -> None:
     assert data["assistant_message_id"] is not None
     assert "Hermes Agent ainda não está habilitado" in data["assistant_text"]
 
-    conversation = client.get(f"/conversations/{data['conversation_id']}")
+    conversation = client.get(
+        f"/conversations/{data['conversation_id']}?tenant_id={company['id']}"
+    )
     assert conversation.status_code == 200
     messages = conversation.json()["messages"]
     assert [m["direction"] for m in messages] == ["inbound", "outbound"]
