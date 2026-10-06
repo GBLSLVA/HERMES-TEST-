@@ -30,7 +30,7 @@ def test_dev_flow_persists_inbound_and_generated_response(client) -> None:
     assert data["duplicate"] is False
     assert data["handoff"] is False
     assert data["assistant_message_id"] is not None
-    assert "Hermes Agent ainda não está habilitado" in data["assistant_text"]
+    assert "ZEUS AGENT ainda não está habilitado" in data["assistant_text"]
 
     conversation = client.get(
         f"/conversations/{data['conversation_id']}?tenant_id={company['id']}"
