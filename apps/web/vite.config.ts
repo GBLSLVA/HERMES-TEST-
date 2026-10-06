@@ -7,4 +7,7 @@ export default defineConfig({
   server: {
     port: 5173,
   },
+  preview: {
+    allowedHosts: ["hermes-web-production-15f7.up.railway.app"],
+  },
 });
