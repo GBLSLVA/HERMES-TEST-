@@ -1270,10 +1270,10 @@ textarea:focus-visible {
   border: 2px solid #dfe4ea;
   border-top-color: var(--accent);
   border-radius: 50%;
-  animation: hermes-spin 0.8s linear infinite;
+  animation: zeus-agent-spin 0.8s linear infinite;
 }
 
-@keyframes hermes-spin {
+@keyframes zeus-agent-spin {
   to {
     transform: rotate(360deg);
   }
