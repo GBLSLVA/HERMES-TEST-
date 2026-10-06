@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     app_env: str = "development"
     database_url: str = "postgresql+psycopg://hermes:hermes@localhost:5432/hermes"
     redis_url: str = "redis://localhost:6379/0"
+    cors_origins: str = "http://localhost:5173"
 
     whatsapp_verify_token: str = "change-me"
     whatsapp_app_secret: str = "change-me"
@@ -23,6 +24,10 @@ class Settings(BaseSettings):
     hermes_timeout_seconds: float = 30.0
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+    @property
+    def allowed_origins(self) -> list[str]:
+        return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
 
 
 @lru_cache

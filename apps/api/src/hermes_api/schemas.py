@@ -74,15 +74,34 @@ class MessageRead(BaseModel):
     created_at: datetime
 
 
-class ConversationRead(BaseModel):
+class ConversationSummaryRead(BaseModel):
     id: UUID
     tenant_id: UUID
     contact_id: UUID
+    contact_display_name: str | None
+    contact_external_id: str
     channel: str
     state: str
     automation_paused: bool
     handoff_reason: str | None
     assigned_to: str | None
+    last_message_at: datetime | None
+    last_message_text: str | None
+    last_message_direction: str | None
+
+
+class ConversationRead(BaseModel):
+    id: UUID
+    tenant_id: UUID
+    contact_id: UUID
+    contact_display_name: str | None
+    contact_external_id: str
+    channel: str
+    state: str
+    automation_paused: bool
+    handoff_reason: str | None
+    assigned_to: str | None
+    last_message_at: datetime | None
     messages: list[MessageRead]
 
 

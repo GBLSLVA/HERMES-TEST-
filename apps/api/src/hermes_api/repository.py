@@ -79,7 +79,9 @@ class HermesRepository:
         self.db.flush()
         return conversation
 
-    def accept_incoming(self, payload: IncomingMessage) -> tuple[bool, Conversation, Message, ExecutionEvent]:
+    def accept_incoming(
+        self, payload: IncomingMessage
+    ) -> tuple[bool, Conversation, Message, ExecutionEvent]:
         self.ensure_tenant(payload.tenant_id)
         existing = self.db.scalar(
             select(Message).where(
@@ -153,10 +155,94 @@ class HermesRepository:
         self.db.refresh(event)
         return False, conversation, message, event
 
-    def set_handoff(self, conversation_id: UUID, *, reason: str, assigned_to: str | None = None) -> Conversation:
+    def list_conversations(self, tenant_id: UUID, *, limit: int = 50) -> list[Conversation]:
+        self.ensure_tenant(tenant_id)
+        return list(
+            self.db.scalars(
+                select(Conversation)
+                .options(
+                    selectinload(Conversation.contact),
+                    selectinload(Conversation.messages),
+                )
+                .where(Conversation.tenant_id == tenant_id)
+                .order_by(
+                    Conversation.last_message_at.desc(),
+                    Conversation.created_at.desc(),
+                )
+                .limit(limit)
+            )
+        )
+
+    def get_conversation(self, conversation_id: UUID) -> Conversation:
+        conversation = self.db.scalar(
+            select(Conversation)
+            .options(
+                selectinload(Conversation.contact),
+                selectinload(Conversation.messages),
+            )
+            .where(Conversation.id == conversation_id)
+        )
+        if conversation is None:
+            raise ConversationNotFoundError("conversation_not_found")
+        return conversation
+
+    def get_conversation_for_tenant(
+        self, tenant_id: UUID, conversation_id: UUID
+    ) -> Conversation:
+        self.ensure_tenant(tenant_id)
+        conversation = self.db.scalar(
+            select(Conversation)
+            .options(
+                selectinload(Conversation.contact),
+                selectinload(Conversation.messages),
+            )
+            .where(
+                Conversation.id == conversation_id,
+                Conversation.tenant_id == tenant_id,
+            )
+        )
+        if conversation is None:
+            raise ConversationNotFoundError("conversation_not_found")
+        return conversation
+
+    def set_handoff(
+        self,
+        conversation_id: UUID,
+        *,
+        reason: str,
+        assigned_to: str | None = None,
+    ) -> Conversation:
         conversation = self.db.get(Conversation, conversation_id)
         if conversation is None:
             raise ConversationNotFoundError("conversation_not_found")
+        return self._apply_handoff(
+            conversation,
+            reason=reason,
+            assigned_to=assigned_to,
+        )
+
+    def set_handoff_for_tenant(
+        self,
+        tenant_id: UUID,
+        conversation_id: UUID,
+        *,
+        reason: str,
+        assigned_to: str | None = None,
+    ) -> Conversation:
+        conversation = self.get_conversation_for_tenant(tenant_id, conversation_id)
+        return self._apply_handoff(
+            conversation,
+            reason=reason,
+            assigned_to=assigned_to,
+        )
+
+    def _apply_handoff(
+        self,
+        conversation: Conversation,
+        *,
+        reason: str,
+        assigned_to: str | None,
+    ) -> Conversation:
         conversation.state = ConversationState.HUMAN_HANDOFF.value
         conversation.automation_paused = True
         conversation.handoff_reason = reason
@@ -178,6 +264,15 @@ class HermesRepository:
         conversation = self.db.get(Conversation, conversation_id)
         if conversation is None:
             raise ConversationNotFoundError("conversation_not_found")
+        return self._apply_resume(conversation)
+
+    def resume_for_tenant(
+        self, tenant_id: UUID, conversation_id: UUID
+    ) -> Conversation:
+        conversation = self.get_conversation_for_tenant(tenant_id, conversation_id)
+        return self._apply_resume(conversation)
+
+    def _apply_resume(self, conversation: Conversation) -> Conversation:
         conversation.state = ConversationState.COLLECTING_INFORMATION.value
         conversation.automation_paused = False
         conversation.handoff_reason = None
@@ -202,7 +297,10 @@ class HermesRepository:
         status: str = MessageStatus.GENERATED.value,
     ) -> Message:
         self.db.refresh(conversation)
-        if conversation.automation_paused or conversation.state == ConversationState.HUMAN_HANDOFF.value:
+        if (
+            conversation.automation_paused
+            or conversation.state == ConversationState.HUMAN_HANDOFF.value
+        ):
             raise PermissionError("automation_paused")
         message = Message(
             tenant_id=conversation.tenant_id,
@@ -252,17 +350,9 @@ class HermesRepository:
         self.db.refresh(event)
         return event
 
-    def get_conversation(self, conversation_id: UUID) -> Conversation:
-        conversation = self.db.scalar(
-            select(Conversation)
-            .options(selectinload(Conversation.messages))
-            .where(Conversation.id == conversation_id)
-        )
-        if conversation is None:
-            raise ConversationNotFoundError("conversation_not_found")
-        return conversation
-
-    def history_for_agent(self, conversation_id: UUID, limit: int = 12) -> list[Message]:
+    def history_for_agent(
+        self, conversation_id: UUID, limit: int = 12
+    ) -> list[Message]:
         rows = list(
             self.db.scalars(
                 select(Message)
