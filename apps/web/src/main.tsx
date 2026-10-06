@@ -2,7 +2,8 @@ import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { getHealth } from "./api";
 import ConnectedInbox from "./ConnectedInbox";
-import { activity, conversations, knowledgeItems, type Conversation } from "./demo";
+import ConnectedRecentConversations from "./ConnectedRecentConversations";
+import { activity, knowledgeItems } from "./demo";
 import "./styles.css";
 
 type Page = "dashboard" | "inbox" | "knowledge" | "integrations" | "metrics" | "settings";
@@ -14,15 +15,6 @@ const navItems: Array<{ id: Page; label: string; icon: string }> = [
   { id: "integrations", label: "Integrações", icon: "↗" },
   { id: "metrics", label: "Indicadores", icon: "⌁" },
 ];
-
-function StatusPill({ status }: { status: Conversation["status"] }) {
-  const labels = { ia: "Hermes", humano: "Humano", aguardando: "Aguardando" } as const;
-  return <span className={"status-pill status-" + status}>{labels[status]}</span>;
-}
-
-function ChannelBadge({ channel }: { channel: Conversation["channel"] }) {
-  return <span className={"channel channel-" + channel}>{channel === "whatsapp" ? "W" : "IG"}</span>;
-}
 
 function Dashboard() {
   const maxActivity = Math.max(...activity.map((item) => item.value));
@@ -114,126 +106,8 @@ function Dashboard() {
           <button className="text-button">Ver todas →</button>
         </div>
         <div className="conversation-table">
-          {conversations.slice(0, 4).map((conversation) => (
-            <div className="conversation-row" key={conversation.id}>
-              <div className="avatar">{conversation.initials}</div>
-              <div className="conversation-main">
-                <div className="conversation-name"><strong>{conversation.name}</strong><ChannelBadge channel={conversation.channel} /></div>
-                <p>{conversation.preview}</p>
-              </div>
-              <StatusPill status={conversation.status} />
-              <time>{conversation.time}</time>
-              <button className="row-action">→</button>
-            </div>
-          ))}
+          <ConnectedRecentConversations />
         </div>
-      </section>
-    </div>
-  );
-}
-
-function Inbox() {
-  const [selected, setSelected] = useState(conversations[0]);
-
-  return (
-    <div className="page-stack">
-      <section className="page-heading compact-heading">
-        <div>
-          <p className="overline">CONVERSAS</p>
-          <h1>Inbox humano</h1>
-          <p className="page-subtitle">Assuma atendimentos e acompanhe o contexto da conversa.</p>
-        </div>
-        <button className="secondary-button">Filtros</button>
-      </section>
-
-      <section className="inbox-layout">
-        <div className="conversation-list-panel">
-          <div className="inbox-search"><span>⌕</span><input placeholder="Buscar conversa..." /></div>
-          <div className="inbox-tabs">
-            <button className="active">Todos <b>5</b></button>
-            <button>Humanos <b>2</b></button>
-            <button>Hermes <b>2</b></button>
-          </div>
-          <div className="inbox-conversations">
-            {conversations.map((conversation) => (
-              <button
-                key={conversation.id}
-                className={"inbox-item " + (selected.id === conversation.id ? "selected" : "")}
-                onClick={() => setSelected(conversation)}
-              >
-                <div className="avatar">{conversation.initials}</div>
-                <div className="inbox-item-main">
-                  <div><strong>{conversation.name}</strong><time>{conversation.time}</time></div>
-                  <p>{conversation.preview}</p>
-                  <StatusPill status={conversation.status} />
-                </div>
-                {conversation.unread ? <span className="unread">{conversation.unread}</span> : null}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="chat-panel">
-          <header className="chat-header">
-            <div className="chat-contact">
-              <div className="avatar large">{selected.initials}</div>
-              <div>
-                <strong>{selected.name}</strong>
-                <span><ChannelBadge channel={selected.channel} /> {selected.channel === "whatsapp" ? "WhatsApp" : "Instagram"}</span>
-              </div>
-            </div>
-            <div className="chat-actions">
-              <StatusPill status={selected.status} />
-              <button className="secondary-button small-button">{selected.status === "humano" ? "Devolver ao Hermes" : "Assumir conversa"}</button>
-            </div>
-          </header>
-
-          <div className="chat-body">
-            <div className="timeline-label">Hoje</div>
-            <div className="message message-client"><span>{selected.preview}</span><time>20:42</time></div>
-            <div className="message message-agent">
-              <div className="message-agent-label"><span className="mini-hermes">H</span> Hermes</div>
-              <span>Posso te ajudar com isso. Para informações específicas, vou usar apenas a base aprovada da empresa.</span>
-              <time>20:42</time>
-            </div>
-            {selected.status === "humano" ? (
-              <div className="handoff-note">
-                <span>↗</span>
-                <div><strong>Conversa transferida para humano</strong><p>A automação está pausada até a equipe retomar o atendimento.</p></div>
-              </div>
-            ) : null}
-          </div>
-
-          <footer className="composer">
-            <textarea placeholder="Digite uma mensagem..." rows={2} />
-            <div className="composer-actions">
-              <div><button>＋</button><button>⌁</button></div>
-              <button className="primary-button send-button">Enviar →</button>
-            </div>
-          </footer>
-        </div>
-
-        <aside className="contact-panel">
-          <div className="contact-hero">
-            <div className="avatar xlarge">{selected.initials}</div>
-            <strong>{selected.name}</strong>
-            <span>Contato demonstrativo</span>
-          </div>
-          <div className="contact-section">
-            <p className="panel-eyebrow">CONTEXTO</p>
-            <dl>
-              <div><dt>Canal</dt><dd>{selected.channel === "whatsapp" ? "WhatsApp" : "Instagram"}</dd></div>
-              <div><dt>Responsável</dt><dd>{selected.status === "humano" ? "Equipe" : "Hermes"}</dd></div>
-              <div><dt>Estado</dt><dd>{selected.status === "humano" ? "Handoff" : "Ativo"}</dd></div>
-            </dl>
-          </div>
-          <div className="contact-section">
-            <p className="panel-eyebrow">AÇÕES</p>
-            <button className="contact-action">Ver histórico completo <span>→</span></button>
-            <button className="contact-action">Adicionar observação <span>＋</span></button>
-            <button className="contact-action danger">Encerrar conversa <span>×</span></button>
-          </div>
-        </aside>
       </section>
     </div>
   );
