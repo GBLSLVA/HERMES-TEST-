@@ -393,3 +393,95 @@ button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 3px
   .knowledge-toolbar { align-items: stretch; flex-direction: column; }
   .knowledge-search { width: 100%; }
 }
+
+
+.inbox-feedback {
+  border-radius: 11px;
+  padding: 10px 13px;
+  font-size: 10px;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+.inbox-feedback.error { background: #fff6f7; border-color: #f0d9dd; color: #a84e5b; }
+.inbox-feedback.success { background: #f2fbf6; border-color: #d8eee3; color: #28795a; }
+
+.inbox-list-state {
+  min-height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 18px;
+  text-align: center;
+  color: #8b98a8;
+  font-size: 9px;
+}
+.loading-spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid #dfe5ee;
+  border-top-color: #315ce7;
+  border-radius: 50%;
+  animation: hermes-spin .8s linear infinite;
+}
+@keyframes hermes-spin { to { transform: rotate(360deg); } }
+
+.inbox-empty-state {
+  min-height: 280px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  text-align: center;
+  gap: 8px;
+}
+.inbox-empty-state h2 { margin: 4px 0 0; font-size: 16px; color: #253b56; }
+.inbox-empty-state p { margin: 0; max-width: 520px; color: #7f8da0; font-size: 10px; line-height: 1.6; }
+.inbox-empty-state code {
+  margin-top: 6px;
+  background: #f4f7fa;
+  border: 1px solid #e5eaf0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  color: #40536d;
+  font-size: 9px;
+}
+.empty-state-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: #eef2ff;
+  color: #4566dd;
+  font-size: 19px;
+}
+.chat-empty { min-height: 100%; }
+
+.message-internal {
+  align-self: center;
+  max-width: 82%;
+  background: #f1f4f8;
+  color: #728096;
+  border: 1px solid #e5eaf0;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 8px;
+  text-align: center;
+}
+
+.composer-disabled { background: #fafbfd; }
+.composer-disabled textarea {
+  color: #9aa6b4;
+  background: transparent;
+  cursor: not-allowed;
+}
+.composer-disabled .composer-actions > span {
+  font-size: 8px;
+  color: #8b98a9;
+}
+.composer-disabled .send-button:disabled,
+.secondary-button:disabled,
+.primary-button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
