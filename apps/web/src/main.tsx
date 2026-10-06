@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { createRoot } from "react-dom/client";
 
 import ConnectedInbox from "./ConnectedInbox";
@@ -37,7 +37,7 @@ function PageHeading({
 }: {
   title: string;
   description: string;
-  action?: React.ReactNode;
+  action?: ReactNode;
 }) {
   return (
     <section className="page-heading">
@@ -171,16 +171,19 @@ function Dashboard({ onOpenInbox }: { onOpenInbox: () => void }) {
 }
 
 function Knowledge() {
+  const [query, setQuery] = useState("");
+  const normalizedQuery = query.trim().toLocaleLowerCase("pt-BR");
+  const visibleItems = knowledgeItems.filter((item) =>
+    !normalizedQuery ||
+    item.title.toLocaleLowerCase("pt-BR").includes(normalizedQuery) ||
+    item.updated.toLocaleLowerCase("pt-BR").includes(normalizedQuery),
+  );
+
   return (
     <div className="page-stack">
       <PageHeading
         title="Conhecimento"
         description="Revise o conteúdo que o Hermes pode usar nas respostas da empresa."
-        action={
-          <button className="secondary-button" type="button" disabled title="Disponível em uma próxima etapa">
-            Novo conteúdo
-          </button>
-        }
       />
 
       <section className="inline-stats" aria-label="Resumo da base de conhecimento">
@@ -195,29 +198,32 @@ function Knowledge() {
             <span>Buscar conteúdo</span>
             <div>
               <span aria-hidden="true">⌕</span>
-              <input id="knowledge-search" placeholder="Título ou termo" />
+              <input
+                id="knowledge-search"
+                placeholder="Título ou termo"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+              />
             </div>
           </label>
-          <button className="secondary-button" type="button" disabled title="Filtros entram na próxima etapa">
-            Todos os status
-          </button>
         </div>
 
         <div className="knowledge-list">
-          {knowledgeItems.map((item) => (
-            <div className="knowledge-row" key={item.title}>
-              <div className="knowledge-copy">
-                <strong>{item.title}</strong>
-                <span>{item.updated}</span>
+          {visibleItems.length ? (
+            visibleItems.map((item) => (
+              <div className="knowledge-row" key={item.title}>
+                <div className="knowledge-copy">
+                  <strong>{item.title}</strong>
+                  <span>{item.updated}</span>
+                </div>
+                <span className={"knowledge-state " + (item.state === "Publicado" ? "published" : "review")}>
+                  {item.state}
+                </span>
               </div>
-              <span className={"knowledge-state " + (item.state === "Publicado" ? "published" : "review")}>
-                {item.state}
-              </span>
-              <button className="row-action" type="button" disabled aria-label={"Abrir " + item.title}>
-                →
-              </button>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div className="recent-empty">Nenhum conteúdo corresponde à busca.</div>
+          )}
         </div>
       </section>
     </div>
@@ -268,9 +274,6 @@ function Integrations() {
               <p>{integration.description}</p>
             </div>
             <span className="integration-status">{integration.status}</span>
-            <button className="secondary-button small-button" type="button" disabled>
-              Configurar
-            </button>
           </article>
         ))}
       </section>
@@ -322,7 +325,7 @@ function Settings() {
       <section className="surface settings-list">
         <div className="settings-row">
           <div><strong>Empresa ativa</strong><span>Studio Aurora · ambiente demonstrativo</span></div>
-          <button className="secondary-button small-button" type="button" disabled>Alterar</button>
+          <span className="status-chip">Piloto</span>
         </div>
         <div className="settings-row">
           <div><strong>Modo do agente</strong><span>Controle humano e base aprovada</span></div>
@@ -391,13 +394,13 @@ function App() {
           </div>
         </div>
 
-        <button className="company-selector" type="button" disabled title="Seletor de empresa entra na próxima etapa">
+        <div className="company-selector" aria-label="Empresa ativa: Studio Aurora">
           <span className="company-avatar">SA</span>
           <span>
             <strong>Studio Aurora</strong>
             <small>Ambiente piloto</small>
           </span>
-        </button>
+        </div>
 
         <nav className="main-nav" aria-label="Navegação principal">
           <p>Menu</p>
