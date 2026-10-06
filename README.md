@@ -171,6 +171,44 @@ HERMES_MODEL=hermes-agent
 
 O backend envia somente o histórico da conversa atual e os artigos ativos da empresa atual ao endpoint `/v1/chat/completions`.
 
+## Front-end conectado ao backend
+
+O console React agora lê as conversas persistidas no PostgreSQL através do FastAPI.
+
+No arquivo `.env` da raiz, configure:
+
+```dotenv
+VITE_API_URL=http://localhost:8000
+VITE_TENANT_ID=UUID-DA-EMPRESA
+```
+
+O Vite está configurado para carregar as variáveis da raiz do repositório.
+
+Para obter um tenant em desenvolvimento:
+
+```bash
+curl -X POST http://localhost:8000/dev/companies \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Studio Aurora","slug":"studio-aurora"}'
+```
+
+Use o `id` retornado em `VITE_TENANT_ID` e inicie o painel:
+
+```bash
+cd apps/web
+npm install
+npm run dev
+```
+
+A tela **Conversas** passa a usar dados reais dos endpoints:
+
+- `GET /conversations?tenant_id=...`
+- `GET /conversations/{id}?tenant_id=...`
+- `POST /conversations/{id}/handoff?tenant_id=...`
+- `POST /conversations/{id}/resume?tenant_id=...`
+
+As consultas e ações do painel são filtradas pelo tenant no servidor. O envio manual de mensagem ainda permanece desativado até a integração real do canal estar pronta.
+
 ## Handoff humano
 
 Uma solicitação explícita como:
