@@ -704,7 +704,7 @@ textarea:focus-visible {
 .conversation-row {
   min-height: 72px;
   display: grid;
-  grid-template-columns: auto minmax(180px, 1fr) auto 82px 26px;
+  grid-template-columns: auto minmax(180px, 1fr) auto 82px;
   gap: 12px;
   align-items: center;
   border-top: 1px solid #edf0f3;
@@ -899,7 +899,7 @@ textarea:focus-visible {
 .knowledge-row {
   min-height: 68px;
   display: grid;
-  grid-template-columns: minmax(180px, 1fr) auto 36px;
+  grid-template-columns: minmax(180px, 1fr) auto;
   gap: 14px;
   align-items: center;
   border-top: 1px solid #edf0f3;
@@ -949,7 +949,7 @@ textarea:focus-visible {
   min-height: 92px;
   padding: 18px 20px;
   display: grid;
-  grid-template-columns: 44px minmax(220px, 1fr) auto auto;
+  grid-template-columns: 44px minmax(220px, 1fr) auto;
   gap: 16px;
   align-items: center;
   border-top: 1px solid #edf0f3;
@@ -1093,6 +1093,8 @@ textarea:focus-visible {
 .status-chip {
   min-height: 28px;
   padding: 0 10px;
+  background: #f2f4f7;
+  color: #667085;
   font-size: 11px;
 }
 
@@ -1662,8 +1664,7 @@ textarea:focus-visible {
     grid-template-columns: 40px 1fr;
   }
 
-  .integration-status,
-  .integration-row .secondary-button {
+  .integration-status {
     grid-column: 2;
     justify-self: start;
   }
