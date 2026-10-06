@@ -1,8 +1,8 @@
-# HERMES — Product context
+# ZEUS AGENT — Product context
 
 ## Product purpose
 
-HERMES is an operational console for companies that receive customer conversations through connected channels and use Hermes Agent with human takeover when needed.
+ZEUS AGENT is an operational console for companies that receive customer conversations through connected channels and use ZEUS AGENT with human takeover when needed.
 
 ## Primary users
 
@@ -12,14 +12,14 @@ HERMES is an operational console for companies that receive customer conversatio
 
 ## Primary job
 
-The interface is an **operate** product: help a person understand the current service state, find the conversation that needs attention, take over safely, and return control to Hermes when appropriate.
+The interface is an **operate** product: help a person understand the current service state, find the conversation that needs attention, take over safely, and return control to ZEUS AGENT when appropriate.
 
 ## Main tasks
 
 1. See whether the API and tenant are available.
 2. Find recent or filtered conversations.
 3. Open the persisted history.
-4. Identify whether Hermes or a human controls the conversation.
+4. Identify whether ZEUS AGENT or a human controls the conversation.
 5. Take over or return control.
 6. Review approved knowledge, integrations, and pilot quality targets.
 
