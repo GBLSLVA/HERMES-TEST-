@@ -1,6 +1,6 @@
-# HERMES — Design system
+# ZEUS AGENT — Design system
 
-This file records the visual rules for the HERMES console so future UI work stays consistent.
+This file records the visual rules for the ZEUS AGENT console so future UI work stays consistent.
 
 ## Design intent
 
@@ -37,7 +37,7 @@ Scale:
 - UI control: 13–14px
 - Metadata: 11–12px
 
-Do not use interface text below 11px. Use sentence case except for the HERMES wordmark.
+Do not use interface text below 11px. Use sentence case except for the ZEUS AGENT wordmark.
 
 ## Spacing
 
@@ -70,7 +70,7 @@ Dashboard metrics may share one divided summary surface instead of four identica
 ## Status
 
 Status colors communicate state, not decoration:
-- Hermes: accent soft
+- ZEUS AGENT: accent soft
 - Human takeover: warning
 - Success/connected: success
 - Failure/offline: danger
@@ -84,8 +84,8 @@ The conversation list, conversation history, and human-control action are the co
 - Search has a visible label.
 - Active filters have text and count.
 - Selected conversation uses a quiet background change, not an ornamental stripe.
-- “Assumir conversa” is primary when Hermes controls the thread.
-- “Devolver ao Hermes” becomes secondary when a human controls it.
+- “Assumir conversa” is primary when ZEUS AGENT controls the thread.
+- “Devolver ao ZEUS AGENT” becomes secondary when a human controls it.
 - The unavailable manual-send state is explained as text rather than shown as a fake composer.
 
 ## Accessibility

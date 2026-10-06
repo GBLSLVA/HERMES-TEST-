@@ -24,7 +24,7 @@ function statusFor(
 
 function StatusPill({ status }: { status: UiStatus }) {
   const labels = {
-    ia: "Hermes",
+    ia: "ZEUS AGENT",
     humano: "Humano",
     aguardando: "Aguardando",
   } as const;
@@ -96,7 +96,7 @@ export default function ConnectedInbox() {
   const [error, setError] = useState<string | null>(null);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<"all" | "human" | "hermes">("all");
+  const [filter, setFilter] = useState<"all" | "human" | "agent">("all");
 
   const loadList = async (preferredId?: string) => {
     if (!TENANT_ID) return;
@@ -160,7 +160,7 @@ export default function ConnectedInbox() {
       const matchesFilter =
         filter === "all" ||
         (filter === "human" && status === "humano") ||
-        (filter === "hermes" && status === "ia");
+        (filter === "agent" && status === "ia");
 
       const name = contactName(item).toLocaleLowerCase("pt-BR");
       const preview = (item.last_message_text ?? "").toLocaleLowerCase("pt-BR");
@@ -173,7 +173,7 @@ export default function ConnectedInbox() {
     () => ({
       all: items.length,
       human: items.filter((item) => statusFor(item) === "humano").length,
-      hermes: items.filter((item) => statusFor(item) === "ia").length,
+      agent: items.filter((item) => statusFor(item) === "ia").length,
     }),
     [items],
   );
@@ -196,7 +196,7 @@ export default function ConnectedInbox() {
 
       if (isHuman) {
         await resumeConversation(TENANT_ID, selectedSummary.id);
-        setActionMessage("Conversa devolvida ao Hermes.");
+        setActionMessage("Conversa devolvida ao ZEUS AGENT.");
       } else {
         await handoffConversation(TENANT_ID, selectedSummary.id);
         setActionMessage("Atendimento assumido pela equipe.");
@@ -221,7 +221,7 @@ export default function ConnectedInbox() {
         <section className="page-heading">
           <div className="page-heading-copy">
             <h1>Conversas</h1>
-            <p>Conecte um tenant para carregar a Inbox persistida do HERMES.</p>
+            <p>Conecte um tenant para carregar a Inbox persistida do ZEUS AGENT.</p>
           </div>
         </section>
 
@@ -244,7 +244,7 @@ export default function ConnectedInbox() {
           <h1>Conversas</h1>
           <p>
             Acompanhe o histórico persistido, assuma um atendimento ou devolva a
-            conversa ao Hermes.
+            conversa ao ZEUS AGENT.
           </p>
         </div>
         <div className="page-heading-action">
@@ -308,11 +308,11 @@ export default function ConnectedInbox() {
               </button>
               <button
                 type="button"
-                className={filter === "hermes" ? "active" : ""}
-                onClick={() => setFilter("hermes")}
-                aria-pressed={filter === "hermes"}
+                className={filter === "agent" ? "active" : ""}
+                onClick={() => setFilter("agent")}
+                aria-pressed={filter === "agent"}
               >
-                Hermes <b>{counts.hermes}</b>
+                ZEUS AGENT <b>{counts.agent}</b>
               </button>
             </div>
           </div>
@@ -403,7 +403,7 @@ export default function ConnectedInbox() {
                     {actionLoading
                       ? "Salvando…"
                       : selectedStatus === "humano"
-                        ? "Devolver ao Hermes"
+                        ? "Devolver ao ZEUS AGENT"
                         : "Assumir conversa"}
                   </button>
                 </div>
@@ -438,7 +438,7 @@ export default function ConnectedInbox() {
                         key={message.id}
                       >
                         {!inbound ? (
-                          <div className="message-agent-label">Hermes</div>
+                          <div className="message-agent-label">ZEUS AGENT</div>
                         ) : null}
                         <span>{message.text || "(mensagem sem texto)"}</span>
                         <time>{clockTime(message.created_at)}</time>
@@ -496,7 +496,7 @@ export default function ConnectedInbox() {
                     <dt>Responsável</dt>
                     <dd>
                       {selectedSummary.assigned_to ||
-                        (selectedStatus === "humano" ? "Equipe" : "Hermes")}
+                        (selectedStatus === "humano" ? "Equipe" : "ZEUS AGENT")}
                     </dd>
                   </div>
                   <div>

@@ -7,7 +7,7 @@ from hermes_api.config import get_settings
 settings = get_settings()
 
 app = FastAPI(
-    title="HERMES API",
+    title="ZEUS AGENT API",
     version="0.2.0",
     description=(
         "Piloto multiempresa para atendimento inteligente com estado persistente, "

@@ -1,4 +1,4 @@
-# Arquitetura do HERMES
+# Arquitetura do ZEUS AGENT
 
 ## Sprint 1 implementada
 
@@ -22,7 +22,7 @@ A Sprint 1 troca o armazenamento em memória por persistência relacional e intr
 5. Persiste a mensagem de entrada e o evento correspondente.
 6. Se houver pedido explícito de humano, ativa `human_handoff` e pausa a automação.
 7. Caso contrário, recupera apenas o histórico e a base aprovada daquele tenant.
-8. Quando habilitado, chama o API Server do Hermes em `/v1/chat/completions`.
+8. Quando habilitado, chama o motor atual do ZEUS AGENT, baseado no Hermes Agent API Server, em `/v1/chat/completions`.
 9. Antes de persistir a resposta automática, revalida se o humano assumiu a conversa.
 10. Persiste resposta e evento de execução.
 
@@ -42,7 +42,7 @@ Meta webhook bruto
   -> persistência idempotente
   -> Redis/fila durável
   -> worker por conversa
-  -> handoff ou Hermes
+  -> handoff ou ZEUS AGENT
   -> revalidação de permissão
   -> envio pelo canal
   -> auditoria/custo
@@ -59,8 +59,8 @@ Fonte de verdade para empresas, contatos, conversas, mensagens, eventos e conhec
 ### Redis
 Disponível na infraestrutura, mas o worker/fila durável ainda será ligado na Sprint 2.
 
-### Hermes Agent
-Integração via API Server compatível com OpenAI. O backend controla o contexto enviado e não dá ao agente acesso irrestrito a dados de outros tenants.
+### ZEUS AGENT
+O produto usa, nesta fase, o Hermes Agent API Server como motor técnico compatível com OpenAI. O backend controla o contexto enviado e não dá ao agente acesso irrestrito a dados de outros tenants.
 
 ### Painel web
 Ainda é uma casca inicial. A inbox humana e o histórico operacional entram no próximo marco.

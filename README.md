@@ -1,6 +1,6 @@
-# HERMES — Atendimento Inteligente para Empresas
+# ZEUS AGENT — Atendimento Inteligente para Empresas
 
-Repositório do produto descrito no estudo de viabilidade **HERMES Agent / Projeto de Negócio** (versão 1.0, 15/09/2026).
+Repositório do **ZEUS AGENT**, evoluído a partir do estudo de viabilidade original **HERMES Agent / Projeto de Negócio** (versão 1.0, 15/09/2026).
 
 ## Estado atual — Sprint 1
 
@@ -14,9 +14,9 @@ A primeira fundação executável já está implementada:
 - estado persistente da conversa;
 - handoff humano que pausa a automação;
 - revalidação do bloqueio antes de gravar resposta automática;
-- cliente real para o **Hermes Agent API Server** via `/v1/chat/completions`;
-- modo de desenvolvimento seguro quando o Hermes ainda não estiver em execução;
-- endpoint de teste ponta a ponta para `mensagem -> conversa -> Hermes/fallback -> resposta`;
+- integração do ZEUS AGENT com o motor técnico atual, **Hermes Agent API Server**, via `/v1/chat/completions`;
+- modo de desenvolvimento seguro quando o motor do ZEUS AGENT ainda não estiver em execução;
+- endpoint de teste ponta a ponta para `mensagem -> conversa -> ZEUS AGENT/fallback -> resposta`;
 - testes automatizados de saúde, idempotência, isolamento, handoff e persistência do fluxo.
 
 > O estudo é um planejamento com hipóteses. Integrações Meta, filas, custos e métricas reais ainda precisam ser homologados no piloto.
@@ -51,7 +51,8 @@ Tenant + Idempotência + Persistência
                  |
                  +--> regra de handoff humano
                  +--> base aprovada do tenant
-                 +--> Hermes Agent API Server
+                 +--> ZEUS AGENT
+                          +--> Hermes Agent API Server (provider atual)
                             |
                             v
                     resposta gerada
@@ -69,7 +70,7 @@ A fila persistente com Redis é o próximo passo antes de considerar os webhooks
 - **Migrations:** Alembic
 - **Banco:** PostgreSQL
 - **Fila planejada:** Redis
-- **Agente:** Hermes Agent via API compatível com OpenAI
+- **Agente:** ZEUS AGENT; provider técnico atual: Hermes Agent API Server compatível com OpenAI
 - **Painel:** React + TypeScript + Vite
 - **Containerização:** Docker Compose
 
@@ -81,7 +82,7 @@ apps/
     migrations/                 migrations Alembic
     src/hermes_api/
       api/routes/               endpoints HTTP
-      services/                 Hermes, handoff e processamento
+      services/                 agente, handoff e processamento
       database.py               conexão SQLAlchemy
       models.py                 entidades persistentes
       repository.py             regras de persistência/tenant
@@ -156,11 +157,11 @@ curl -X POST http://localhost:8000/dev/messages \
   }'
 ```
 
-Se `HERMES_ENABLED=false`, a aplicação usa um fallback explícito de desenvolvimento. Ele **não finge ser IA**: apenas permite validar banco, idempotência e fluxo.
+Se `HERMES_ENABLED=false`, o ZEUS AGENT usa um fallback explícito de desenvolvimento. Ele **não finge ser IA**: apenas permite validar banco, idempotência e fluxo.
 
-## Conectar ao Hermes Agent real
+## Conectar o motor atual do ZEUS AGENT
 
-O Hermes Agent atual expõe um API Server compatível com OpenAI. Depois de iniciar o gateway do Hermes com o API Server habilitado, ajuste:
+O ZEUS AGENT usa, nesta fase, o Hermes Agent API Server como provider técnico compatível com OpenAI. Depois de iniciar o gateway desse provider com o API Server habilitado, ajuste:
 
 ```dotenv
 HERMES_ENABLED=true
@@ -169,7 +170,7 @@ HERMES_API_KEY=change-me-local-dev
 HERMES_MODEL=hermes-agent
 ```
 
-O backend envia somente o histórico da conversa atual e os artigos ativos da empresa atual ao endpoint `/v1/chat/completions`.
+O backend do ZEUS AGENT envia somente o histórico da conversa atual e os artigos ativos da empresa atual ao endpoint `/v1/chat/completions`.
 
 ## Front-end conectado ao backend
 

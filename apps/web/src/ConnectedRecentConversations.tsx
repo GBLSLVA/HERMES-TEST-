@@ -9,7 +9,7 @@ function statusFor(item: ConversationSummary) {
   if (item.state === "awaiting_confirmation" || item.state === "awaiting_tool") {
     return { className: "status-aguardando", label: "Aguardando" };
   }
-  return { className: "status-ia", label: "Hermes" };
+  return { className: "status-ia", label: "ZEUS AGENT" };
 }
 
 function contactName(item: ConversationSummary) {

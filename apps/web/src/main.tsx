@@ -183,7 +183,7 @@ function Knowledge() {
     <div className="page-stack">
       <PageHeading
         title="Conhecimento"
-        description="Revise o conteúdo que o Hermes pode usar nas respostas da empresa."
+        description="Revise o conteúdo que o ZEUS AGENT pode usar nas respostas da empresa."
       />
 
       <section className="inline-stats" aria-label="Resumo da base de conhecimento">
@@ -245,7 +245,7 @@ function Integrations() {
       code: "IG",
     },
     {
-      name: "Hermes Agent",
+      name: "ZEUS AGENT",
       description: "Motor de conversa conectado ao backend por API compatível com OpenAI.",
       status: "Preparado",
       code: "H",
@@ -389,7 +389,7 @@ function App() {
         <div className="brand">
           <div className="brand-mark" aria-hidden="true">H</div>
           <div>
-            <strong>HERMES</strong>
+            <strong>ZEUS AGENT</strong>
             <span>Console de atendimento</span>
           </div>
         </div>

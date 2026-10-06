@@ -93,7 +93,7 @@ class DevelopmentAgentGateway:
         del company, history, knowledge
         return AgentAnswer(
             text=(
-                "Mensagem registrada. O Hermes Agent ainda não está habilitado neste ambiente; "
+                "Mensagem registrada. O ZEUS AGENT ainda não está habilitado neste ambiente; "
                 "um atendente pode assumir a conversa pelo painel."
             )
         )

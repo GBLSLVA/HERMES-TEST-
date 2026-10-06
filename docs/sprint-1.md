@@ -16,7 +16,7 @@ Data de implementação: 18/09/2026.
 - [x] Handoff humano e pausa de automação.
 - [x] Retomada manual.
 - [x] Revalidação do handoff antes da resposta automática.
-- [x] Adapter HTTP para Hermes Agent API Server.
+- [x] Adapter HTTP do ZEUS AGENT para o Hermes Agent API Server.
 - [x] Endpoint de desenvolvimento para executar o fluxo sem Meta.
 - [x] Testes automatizados centrais.
 
