@@ -25,7 +25,9 @@ def test_explicit_human_request_pauses_automation(client) -> None:
     assert data["state"] == "human_handoff"
     assert data["assistant_message_id"] is None
 
-    conversation = client.get(f"/conversations/{data['conversation_id']}")
+    conversation = client.get(
+        f"/conversations/{data['conversation_id']}?tenant_id={tenant_id}"
+    )
     assert conversation.status_code == 200
     assert conversation.json()["automation_paused"] is True
 
@@ -43,7 +45,9 @@ def test_resume_reenables_automation(client) -> None:
         },
     ).json()
 
-    resumed = client.post(f"/conversations/{result['conversation_id']}/resume")
+    resumed = client.post(
+        f"/conversations/{result['conversation_id']}/resume?tenant_id={tenant_id}"
+    )
     assert resumed.status_code == 200
     assert resumed.json()["state"] == "collecting_information"
     assert resumed.json()["automation_paused"] is False
