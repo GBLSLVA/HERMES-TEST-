@@ -12,7 +12,7 @@
 - [x] migration inicial;
 - [x] idempotência;
 - [x] handoff e retomada;
-- [x] adapter para Hermes Agent API Server;
+- [x] adapter do ZEUS AGENT para o Hermes Agent API Server;
 - [x] testes centrais do fluxo.
 
 ## Semanas 2–3 — Prova dos canais
