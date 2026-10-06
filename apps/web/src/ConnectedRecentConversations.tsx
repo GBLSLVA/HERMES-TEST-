@@ -83,7 +83,6 @@ export default function ConnectedRecentConversations() {
             </div>
             <span className={"status-pill " + status.className}>{status.label}</span>
             <time>{relativeTime(conversation.last_message_at)}</time>
-            <span className="row-action">→</span>
           </div>
         );
       })}
